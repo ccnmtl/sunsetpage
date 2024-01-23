@@ -1,5 +1,9 @@
+APP=sunset
+REGISTRY ?= docker.io/
+
 include docker.mk
 
 .DEFAULT_GOAL := build
-build:
-	$(call docker.build)
+
+main_target: build
+	echo 'Docker build completed.'
