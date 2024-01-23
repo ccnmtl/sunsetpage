@@ -15,7 +15,7 @@ env.APP = APP
 env.REPO = REPO
 
 def staging_hosts = STAGING_HOSTS.split(" ")
-// def prod_hosts = PROD_HOSTS.split(" ")
+def prod_hosts = PROD_HOSTS.split(" ")
 
 def err = null
 currentBuild.result = "SUCCESS"
@@ -52,24 +52,24 @@ try {
         parallel branches
     }
 
-    // node {
-    //     def branches = [:]
-    //     stage "Docker Pull (prod)"
+    node {
+        def branches = [:]
+        stage "Docker Pull (prod)"
 
-    //     for (int i = 0; i < prod_hosts.size(); i++) {
-    //         branches["pull-${i}"] = create_pull_exec(i, prod_hosts[i])
-    //     }
-    //     parallel branches
-    // }
+        for (int i = 0; i < prod_hosts.size(); i++) {
+            branches["pull-${i}"] = create_pull_exec(i, prod_hosts[i])
+        }
+        parallel branches
+    }
 
-    // node {
-    //     stage "Restart Service (prod)"
-    //     def branches = [:]
-    //     for (int i = 0; i < prod_hosts.size(); i++) {
-    //         branches["web-restart-${i}"] = create_restart_web_exec(i, prod_hosts[i])
-    //     }
-    //     parallel branches
-    // }
+    node {
+        stage "Restart Service (prod)"
+        def branches = [:]
+        for (int i = 0; i < prod_hosts.size(); i++) {
+            branches["web-restart-${i}"] = create_restart_web_exec(i, prod_hosts[i])
+        }
+        parallel branches
+    }
 
 } catch (caughtError) {
     err = caughtError
